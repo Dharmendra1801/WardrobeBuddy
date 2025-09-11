@@ -17,5 +17,5 @@ public class Accessory extends Product {
 
     @Id
     private int accessoryID;
-    private int accessoriesID;
+    private int wardrobeID;
 }

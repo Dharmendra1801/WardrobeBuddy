@@ -18,5 +18,5 @@ public class Clothe extends Product {
 
     @Id
     private int clothID;
-    private int clothesID;
+    private int wardrobeID;
 }

@@ -17,5 +17,5 @@ public class Footwear extends Product {
 
     @Id
     private int footwearID;
-    private int footwearsID;
+    private int wardrobeID;
 }

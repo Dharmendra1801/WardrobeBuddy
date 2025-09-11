@@ -17,5 +17,5 @@ public class Extra extends Product {
 
     @Id
     private int ExtraID;
-    private int ExtrasID;
+    private int wardrobeID;
 }
