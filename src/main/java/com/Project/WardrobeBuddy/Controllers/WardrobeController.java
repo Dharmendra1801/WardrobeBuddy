@@ -1,93 +1,112 @@
 package com.Project.WardrobeBuddy.Controllers;
 
-import com.Project.WardrobeBuddy.Models.Wardrobe;
-import com.Project.WardrobeBuddy.Services.WardrobeServices;
+
+import com.Project.WardrobeBuddy.Models.Product;
+import com.Project.WardrobeBuddy.Models.ReturnPOJO;
+import com.Project.WardrobeBuddy.Services.ProductServices;
 import com.Project.WardrobeBuddy.Services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
-@RequestMapping("/api/{username}")
+@RequestMapping("/api/{username}/{wardrobeName}")
 public class WardrobeController {
+
+    @Autowired
+    ProductServices productServices;
 
     @Autowired
     TokenService tokenService;
 
-    @Autowired
-    WardrobeServices wardrobeServices;
+    @GetMapping("/get_all_products")
+    public ResponseEntity<ReturnPOJO> getAllProducts(@PathVariable String username,
+                                                     @PathVariable String wardrobeName,
+                                                     @RequestHeader("auth_token") String token) {
 
+        if (!tokenService.tokenCheck(token)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ReturnPOJO());
 
-    @PostMapping("/create")
-    public ResponseEntity<String> createWardrobe(@PathVariable String username,
-                                                 @RequestBody Wardrobe wardrobe,
-                                                 @RequestHeader("auth_token") String token) {
+        ReturnPOJO result = productServices.getAllProducts(username,wardrobeName);
 
-        if (!tokenService.tokenCheck(token)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login required!!!");
+        if (result==null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ReturnPOJO());
 
-        if (wardrobeServices.createWardrobe(wardrobe))
-            return ResponseEntity.status(HttpStatus.CREATED).body("Wardrobe saved");
-
-        return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body("Wardrobe already exists");
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @GetMapping("/check/{wardrobeName}")
-    public ResponseEntity<String> checkWardrobe(@PathVariable String username,
-                                                @PathVariable String wardrobeName,
-                                                @RequestHeader("auth_token") String token) {
+    @GetMapping("/get_products/{productType}")
+    public ResponseEntity<ReturnPOJO> getProducts(@PathVariable String username,
+                                                  @PathVariable String wardrobeName,
+                                                  @PathVariable String productType,
+                                                  @RequestHeader("auth_token") String token) {
 
-        if (!tokenService.tokenCheck(token)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login required!!!");
+        if (!tokenService.tokenCheck(token)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ReturnPOJO());
 
-        if (wardrobeServices.checkWardrobe(username,wardrobeName))
-            return ResponseEntity.status(HttpStatus.FOUND).body("Exists");
+        ReturnPOJO result = productServices.getProducts(username,wardrobeName,productType);
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wardrobe doesn't exist");
+        if (result==null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ReturnPOJO());
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @DeleteMapping("/delete/{wardrobeName}")
-    public ResponseEntity<String> deleteWardrobe(@PathVariable String username,
-                                                 @PathVariable String wardrobeName,
-                                                 @RequestHeader("auth_token") String token) {
+    @GetMapping("/get_product/{productType}/{productID}")
+    public ResponseEntity<Product> getIndiProduct(@PathVariable String productType,
+                                                  @PathVariable int productID,
+                                                  @RequestHeader("auth_token") String token) {
 
-        if (!tokenService.tokenCheck(token)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login required!!!");
+        if (!tokenService.tokenCheck(token)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Product());
 
-        if (wardrobeServices.deleteWardrobe(username,wardrobeName))
-            return ResponseEntity.status(HttpStatus.GONE).body("Deleted");
+        Product result = productServices.getIndiProduct(productType,productID);
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wardrobe doesn't exist");
+        if (result==null)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Product());
+
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
-    @GetMapping("/show/{wardrobeName}")
-    public ResponseEntity<Wardrobe> showWardrobe(@PathVariable String username,
-                                                 @PathVariable String wardrobeName,
-                                                 @RequestHeader("auth_token") String token) {
-
-        if (!tokenService.tokenCheck(token)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new Wardrobe());
-
-        Wardrobe wardrobe = wardrobeServices.getWardrobe(username,wardrobeName);
-        if (wardrobe==null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Wardrobe());
-
-        return ResponseEntity.status(HttpStatus.FOUND).body(wardrobe);
-    }
-
-    @GetMapping("/show_all")
-    public ResponseEntity<List<Wardrobe>> showWardrobe(@PathVariable String username,
+    @PostMapping("/add_product/{productType}")
+    public ResponseEntity<String> addProduct(@PathVariable String username,
+                                             @PathVariable String wardrobeName,
+                                             @RequestBody Product product,
+                                             @PathVariable String productType,
                                              @RequestHeader("auth_token") String token) {
 
-        if (!tokenService.tokenCheck(token)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ArrayList<>());
+        if (!tokenService.tokenCheck(token)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login required");
+        System.out.println("idhar tak");
+        productServices.addProduct(username,wardrobeName,productType, product);
+        return ResponseEntity.status(HttpStatus.CREATED).body(StringUtils.capitalize(productType.toLowerCase()) +" created");
+    }
 
-        List<Wardrobe> list_of_wardrobes = wardrobeServices.getAllWardrobe(username);
-        if (list_of_wardrobes==null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<>());
+    @DeleteMapping("/delete/{productType}/{productID}")
+    public ResponseEntity<String> deleteProduct(@PathVariable int productID,
+                                                @PathVariable String productType,
+                                                @RequestHeader("auth_token") String token) {
 
-        return ResponseEntity.status(HttpStatus.FOUND).body(list_of_wardrobes);
+        if (!tokenService.tokenCheck(token)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login required");
+
+        if (productServices.deleteProduct(productID,productType))
+            return ResponseEntity.status(HttpStatus.OK).body("Deleted");
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product doesn't exist");
+    }
+
+    @PostMapping("/update/{productType}/{productID}")
+    public ResponseEntity<String> updateProduct(@PathVariable String username,
+                                                @PathVariable String wardrobeName,
+                                                @PathVariable int productID,
+                                                @PathVariable String productType,
+                                                @RequestBody Product product,
+                                                @RequestHeader("auth_token") String token) {
+
+        if (!tokenService.tokenCheck(token)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login required");
+
+        if (productServices.updateProduct(username,wardrobeName,product,productID,productType))
+            return ResponseEntity.status(HttpStatus.OK).body("Updated");
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product doesn't exist");
     }
 }
-
-
-

@@ -36,4 +36,8 @@ public class WardrobeServices {
     public List<Wardrobe> getAllWardrobe(String username) {
         return wardrobeRepo.findAllByUsername(username).orElse(null);
     }
+
+    public int getWardrobeID(String username,String wardrobeName) {
+        return wardrobeRepo.getWardrobeIDByUsernameAndWardrobeName(username,wardrobeName);
+    }
 }

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Auth Testing</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        input, button { margin: 5px; padding: 5px; }
+        .section { margin-bottom: 30px; border-bottom: 1px solid #ccc; padding-bottom: 20px; }
+        #message { color: green; }
+    </style>
+</head>
+<body>
+<h1>Authentication Test</h1>
+
+<div class="section">
+    <h2>Register</h2>
+    <input type="text" id="regUsername" placeholder="Username">
+    <input type="password" id="regPassword" placeholder="Password">
+    <button onclick="register()">Register</button>
+</div>
+
+<div class="section">
+    <h2>Login</h2>
+    <input type="text" id="loginUsername" placeholder="Username">
+    <input type="password" id="loginPassword" placeholder="Password">
+    <button onclick="login()">Login</button>
+</div>
+
+<div class="section">
+    <h2>Logout</h2>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<div id="message"></div>
+
+<script>
+    let authToken = "";
+
+    function register() {
+        const username = document.getElementById("regUsername").value;
+        const password = document.getElementById("regPassword").value;
+
+        fetch("localhost:8080/api/auth/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        })
+        .then(res => res.text())
+        .then(msg => document.getElementById("message").innerText = msg)
+        .catch(err => console.error(err));
+    }
+
+    function login() {
+        const username = document.getElementById("loginUsername").value;
+        const password = document.getElementById("loginPassword").value;
+
+        fetch("locahost:8080/api/auth/login", {
+            method: "POST",
+            headers: { "username": username, "password": password }
+        })
+        .then(res => {
+            authToken = res.headers.get("auth_token") || "";
+            return res.text();
+        })
+        .then(msg => document.getElementById("message").innerText = msg)
+        .catch(err => console.error(err));
+    }
+
+    function logout() {
+        if (!authToken) { alert("Login first"); return; }
+
+        fetch("localhost:8080/api/auth/logout", {
+            method: "POST",
+            headers: { "auth_token": authToken }
+        })
+        .then(res => res.text())
+        .then(msg => {
+            document.getElementById("message").innerText = msg;
+            authToken = "";
+        })
+        .catch(err => console.error(err));
+    }
+</script>
+</body>
+</html>

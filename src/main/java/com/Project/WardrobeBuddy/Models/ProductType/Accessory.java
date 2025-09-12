@@ -2,6 +2,8 @@ package com.Project.WardrobeBuddy.Models.ProductType;
 
 import com.Project.WardrobeBuddy.Models.Product;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +18,7 @@ import lombok.NoArgsConstructor;
 public class Accessory extends Product {
 
     @Id
+    @GeneratedValue (strategy = GenerationType.IDENTITY)
     private int accessoryID;
     private int wardrobeID;
 }
