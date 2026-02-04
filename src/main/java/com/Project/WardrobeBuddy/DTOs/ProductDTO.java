@@ -5,15 +5,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
-public class WardrobeDTO {
-    private String wardrobeName;
-    private Date dateCreated;
+public class ProductDTO {
+    private String productName;
+    private String brand;
+    private Double price;
+    private Date bought_date;
+    private String category;
     private String note;
-    private List<ProductDTO> productNameList;
-    private Integer noOfProducts;
 }

@@ -42,7 +42,7 @@ public class WardrobeController {
 
         List<WardrobeDTO> list_of_wardrobes = wardrobeServices.getAllWardrobe(username);
         if (list_of_wardrobes.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<>());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
         return ResponseEntity.status(HttpStatus.FOUND).body(list_of_wardrobes);
     }
@@ -97,6 +97,32 @@ public class WardrobeController {
 
         if (wardrobeServices.deleteWardrobe(username,wardrobeName))
             return ResponseEntity.status(HttpStatus.GONE).body("Deleted");
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wardrobe doesn't exist");
+    }
+
+    @PutMapping("/change_name/{wardrobeName}")
+    public ResponseEntity<String> changeName(@PathVariable String username,
+                                             @PathVariable String wardrobeName,
+                                             @RequestParam String newName) {
+
+        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (wardrobeServices.changeName(username,wardrobeName,newName))
+            return ResponseEntity.status(HttpStatus.GONE).body("Changed");
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wardrobe doesn't exist");
+    }
+
+    @PutMapping("/change_note/{wardrobeName}")
+    public ResponseEntity<String> changeNote(@PathVariable String username,
+                                             @PathVariable String wardrobeName,
+                                             @RequestParam String newNote) {
+
+        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (wardrobeServices.changeNote(username,wardrobeName,newNote))
+            return ResponseEntity.status(HttpStatus.GONE).body("Changed");
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wardrobe doesn't exist");
     }
