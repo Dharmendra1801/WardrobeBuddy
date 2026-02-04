@@ -1,43 +1,93 @@
 package com.Project.WardrobeBuddy.Services;
 
+import com.Project.WardrobeBuddy.DTOs.WardrobeDTO;
+import com.Project.WardrobeBuddy.Models.Product;
+import com.Project.WardrobeBuddy.Models.User;
 import com.Project.WardrobeBuddy.Models.Wardrobe;
 import com.Project.WardrobeBuddy.Repositories.WardrobeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class WardrobeServices {
 
     @Autowired
     WardrobeRepo wardrobeRepo;
 
-    public boolean createWardrobe(Wardrobe wardrobe) {
-        if (checkWardrobe(wardrobe.getUsername(),wardrobe.getWardrobeName())) return false;
+    @Autowired
+    UserService userService;
+
+    public boolean createWardrobe(String username, WardrobeDTO wardrobeDTO) {
+        if (checkWardrobe(username, wardrobeDTO.getWardrobeName())) return false;
+        User user = userService.getUser(username);
+        Wardrobe wardrobe = new Wardrobe();
+        wardrobe.setWardrobeName(wardrobeDTO.getWardrobeName());
+        wardrobe.setDateCreated(wardrobeDTO.getDateCreated());
+        wardrobe.setNote(wardrobeDTO.getNote());
+        wardrobe.setProducts(new ArrayList<>());
+        wardrobe.setUser(user);
         wardrobeRepo.save(wardrobe);
         return true;
     }
 
     public boolean checkWardrobe(String username, String wardrobeName) {
-        return wardrobeRepo.findByUsernameAndWardrobeName(username, wardrobeName).orElse(null)!=null;
+        return wardrobeRepo.findByUserUsernameAndWardrobeName(username, wardrobeName).orElse(null)!=null;
     }
 
     public boolean deleteWardrobe(String username, String wardrobeName) {
         if (!checkWardrobe(username, wardrobeName)) return false;
-        wardrobeRepo.deleteByUsernameAndWardrobeName(username, wardrobeName);
+        wardrobeRepo.deleteByUserUsernameAndWardrobeName(username, wardrobeName);
         return true;
     }
 
-    public Wardrobe getWardrobe(String username, String wardrobeName) {
-        return wardrobeRepo.findByUsernameAndWardrobeName(username, wardrobeName).orElse(null);
+    public WardrobeDTO getWardrobe(String username, String wardrobeName) {
+        Wardrobe ward = wardrobeRepo.findByUserUsernameAndWardrobeName(username, wardrobeName).orElse(null);
+        return convertOBJtoDTO(ward);
     }
 
-    public List<Wardrobe> getAllWardrobe(String username) {
-        return wardrobeRepo.findAllByUsername(username).orElse(null);
+
+    public Long getId(String username, String wardrobeName) {
+        Wardrobe ward = wardrobeRepo.findByUserUsernameAndWardrobeName(username, wardrobeName).orElse(null);
+        if (ward==null) return null;
+        return ward.getId();
     }
 
-    public int getWardrobeID(String username,String wardrobeName) {
-        return wardrobeRepo.getWardrobeIDByUsernameAndWardrobeName(username,wardrobeName);
+    public List<WardrobeDTO> getAllWardrobe(String username) {
+        List<Wardrobe> list = wardrobeRepo.findAllByUsername(username).orElse(null);
+        if (list==null) return new ArrayList<>();
+        List<WardrobeDTO> returnList = new ArrayList<>();
+
+        for (Wardrobe ward: list) {
+            returnList.add(convertOBJtoDTO(ward));
+        }
+        return returnList;
+    }
+    
+    public WardrobeDTO getWardrobeById(Long id) {
+        Wardrobe ward = wardrobeRepo.findById(id).orElse(null);
+        return convertOBJtoDTO(ward);
+    }
+
+    private WardrobeDTO convertOBJtoDTO(Wardrobe ward) {
+        if (ward==null) return null;
+        WardrobeDTO wardrobe = new WardrobeDTO();
+        wardrobe.setDateCreated(ward.getDateCreated());
+        wardrobe.setWardrobeName(ward.getWardrobeName());
+        wardrobe.setNote(ward.getNote());
+        List<String> list = convertProductToDTO(ward.getProducts());
+        wardrobe.setProductNameList(list);
+    }
+
+    private List<String> convertProductToDTO(List<Product> products) {
+        List<String> list = new ArrayList<>();
+        for(Product p: products) {
+            list.add(p.getProductName());
+        }
+        return list;
     }
 }

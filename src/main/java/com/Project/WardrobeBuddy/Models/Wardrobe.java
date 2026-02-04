@@ -1,22 +1,26 @@
 package com.Project.WardrobeBuddy.Models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
+import java.util.Date;
+import java.util.List;
+
+@Getter
+@Setter
 @NoArgsConstructor
 @Entity
 public class Wardrobe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int wardrobeID;
-    private String username;
+    private Long id;
     private String wardrobeName;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    @OneToMany(mappedBy = "wardrobe", cascade = CascadeType.ALL)
+    private List<Product> products;
+    private Date dateCreated;
+    private String note;
 }

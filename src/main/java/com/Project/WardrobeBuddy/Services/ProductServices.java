@@ -5,11 +5,6 @@ import com.Project.WardrobeBuddy.Models.ProductType.Accessory;
 import com.Project.WardrobeBuddy.Models.ProductType.Clothe;
 import com.Project.WardrobeBuddy.Models.ProductType.Extra;
 import com.Project.WardrobeBuddy.Models.ProductType.Footwear;
-import com.Project.WardrobeBuddy.Models.ReturnPOJO;
-import com.Project.WardrobeBuddy.Repositories.AccessoryRepo;
-import com.Project.WardrobeBuddy.Repositories.ClotheRepo;
-import com.Project.WardrobeBuddy.Repositories.ExtraRepo;
-import com.Project.WardrobeBuddy.Repositories.FootwearRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
