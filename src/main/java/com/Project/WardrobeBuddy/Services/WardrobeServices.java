@@ -30,13 +30,14 @@ public class WardrobeServices {
         wardrobe.setWardrobeName(wardrobeDTO.getWardrobeName());
         wardrobe.setDateCreated(wardrobeDTO.getDateCreated());
         wardrobe.setNote(wardrobeDTO.getNote());
+        wardrobe.setProductCount(wardrobeDTO.getNoOfProducts());
         wardrobe.setProducts(new ArrayList<>());
         wardrobe.setUser(user);
         wardrobeRepo.save(wardrobe);
         return true;
     }
 
-    private Wardrobe getWardrobeFromRepo(String username, String wardrobeName) {
+    public Wardrobe getWardrobeFromRepo(String username, String wardrobeName) {
         return wardrobeRepo.findByUserUsernameAndWardrobeName(username, wardrobeName).orElse(null);
     }
 
@@ -63,16 +64,13 @@ public class WardrobeServices {
     }
 
     public List<WardrobeDTO> getAllWardrobe(String username) {
-        List<Wardrobe> list = wardrobeRepo.findAllByUsername(username).orElse(null);
+        List<Wardrobe> list = wardrobeRepo.findAllByUserUsername(username).orElse(null);
         if (list==null) return new ArrayList<>();
+
         List<WardrobeDTO> returnList = new ArrayList<>();
 
         for (Wardrobe ward: list) {
-            WardrobeDTO wardrobe = new WardrobeDTO();
-            wardrobe.setWardrobeName(ward.getWardrobeName());
-            wardrobe.setDateCreated(ward.getDateCreated());
-            wardrobe.setNoOfProducts(ward.getProducts().size());
-            returnList.add(wardrobe);
+            returnList.add(convertOBJtoDTO(ward));
         }
         return returnList;
     }
@@ -88,24 +86,8 @@ public class WardrobeServices {
         wardrobe.setDateCreated(ward.getDateCreated());
         wardrobe.setWardrobeName(ward.getWardrobeName());
         wardrobe.setNote(ward.getNote());
-        wardrobe.setNoOfProducts(ward.getProducts().size());
-        List<ProductDTO> list = convertProductToDTO(ward.getProducts());
-        wardrobe.setProductNameList(list);
+        wardrobe.setNoOfProducts(ward.getProductCount());
         return wardrobe;
-    }
-
-    private List<ProductDTO> convertProductToDTO(List<Product> products) {
-        List<ProductDTO> list = new ArrayList<>();
-        for(Product p: products) {
-            ProductDTO product = new ProductDTO();
-            product.setProductName(p.getProductName());
-            product.setBrand(p.getBrand());
-            product.setPrice(p.getPrice());
-            product.setCategory(p.getCategory());
-            product.setBought_date(p.getBought_date());
-            list.add(product);
-        }
-        return list;
     }
 
     public boolean changeName(String username, String wardrobeName, String newName) {

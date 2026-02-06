@@ -23,4 +23,5 @@ public class Wardrobe {
     private List<Product> products;
     private Date dateCreated;
     private String note;
+    private Integer productCount;
 }

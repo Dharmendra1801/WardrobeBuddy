@@ -1,7 +1,6 @@
 package com.Project.WardrobeBuddy.Controllers;
 
 import com.Project.WardrobeBuddy.DTOs.WardrobeDTO;
-import com.Project.WardrobeBuddy.Models.Wardrobe;
 import com.Project.WardrobeBuddy.Services.WardrobeServices;
 import com.Project.WardrobeBuddy.Services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/{username}")
+@RequestMapping("/api/{username}/wardrobe")
 public class WardrobeController {
 
     @Autowired
@@ -23,7 +22,7 @@ public class WardrobeController {
     WardrobeServices wardrobeServices;
 
 
-    @PostMapping("/create_wardrobe")
+    @PostMapping("/new")
     public ResponseEntity<String> createWardrobe(@RequestBody WardrobeDTO wardrobe,
                                                  @PathVariable String username) {
 
@@ -35,65 +34,64 @@ public class WardrobeController {
         return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body("Wardrobe name already exists");
     }
 
-    @GetMapping("/show_all_wardrobes")
+    @GetMapping("/all")
     public ResponseEntity<List<WardrobeDTO>> showWardrobe(@PathVariable String username) {
 
-        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ArrayList<>());
 
         List<WardrobeDTO> list_of_wardrobes = wardrobeServices.getAllWardrobe(username);
-        if (list_of_wardrobes.isEmpty())
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 
         return ResponseEntity.status(HttpStatus.FOUND).body(list_of_wardrobes);
     }
 
-    @GetMapping("/show_wardrobe/{wardrobeName}")
+    @GetMapping("/name/{wardrobeName}")
     public ResponseEntity<WardrobeDTO> showWardrobe(@PathVariable String username,
                                                     @PathVariable String wardrobeName) {
 
-        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new WardrobeDTO());
 
         WardrobeDTO wardrobe = wardrobeServices.getWardrobe(username,wardrobeName);
         if (wardrobe==null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new WardrobeDTO());
 
         return ResponseEntity.status(HttpStatus.FOUND).body(wardrobe);
     }
 
-    @GetMapping("/get_id/{wardrobeName}")
+
+    @GetMapping("/id/{wardrobeName}")
     public ResponseEntity<Long> getWardrobeId(@PathVariable String username,
                                               @PathVariable String wardrobeName) {
 
-        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(-1L);
 
         Long id = wardrobeServices.getId(username,wardrobeName);
 
         if (id==null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(-1L);
 
         return ResponseEntity.status(HttpStatus.FOUND).body(id);
     }
 
-    @GetMapping("/show_wardrobe_by_Id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<WardrobeDTO> showWardrobeById(@PathVariable String username,
                                                         @PathVariable Long id) {
 
-        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new WardrobeDTO());
 
         WardrobeDTO wardrobe = wardrobeServices.getWardrobeById(id);
 
         if (wardrobe==null)
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new WardrobeDTO());
 
         return ResponseEntity.status(HttpStatus.FOUND).body(wardrobe);
     }
 
 
-    @DeleteMapping("/delete_wardrobe/{wardrobeName}")
+    @DeleteMapping("/delete/{wardrobeName}")
     public ResponseEntity<String> deleteWardrobe(@PathVariable String username,
                                                  @PathVariable String wardrobeName) {
 
-        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not logged in");
 
         if (wardrobeServices.deleteWardrobe(username,wardrobeName))
             return ResponseEntity.status(HttpStatus.GONE).body("Deleted");
@@ -106,10 +104,10 @@ public class WardrobeController {
                                              @PathVariable String wardrobeName,
                                              @RequestParam String newName) {
 
-        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not logged in");
 
         if (wardrobeServices.changeName(username,wardrobeName,newName))
-            return ResponseEntity.status(HttpStatus.GONE).body("Changed");
+            return ResponseEntity.status(HttpStatus.OK).body("Changed");
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wardrobe doesn't exist");
     }
@@ -119,10 +117,10 @@ public class WardrobeController {
                                              @PathVariable String wardrobeName,
                                              @RequestParam String newNote) {
 
-        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not logged in");
 
         if (wardrobeServices.changeNote(username,wardrobeName,newNote))
-            return ResponseEntity.status(HttpStatus.GONE).body("Changed");
+            return ResponseEntity.status(HttpStatus.OK).body("Changed");
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wardrobe doesn't exist");
     }

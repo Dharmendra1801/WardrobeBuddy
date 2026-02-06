@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface WardrobeRepo extends JpaRepository<Wardrobe,Long> {
     Optional<Wardrobe> findByUserUsernameAndWardrobeName(String username, String wardrobeName);
-    Optional<List<Wardrobe>> findAllByUsername(String username);
+    Optional<List<Wardrobe>> findAllByUserUsername(String username);
     @Transactional
     void deleteByUserUsernameAndWardrobeName(String username, String wardrobeName);
 }

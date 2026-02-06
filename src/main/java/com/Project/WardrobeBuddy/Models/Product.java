@@ -22,5 +22,6 @@ public class Product {
     private Date bought_date;
     private String category;
     private String note;
+    private Integer quantity;
 //    private byte[] image;
 }

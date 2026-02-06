@@ -14,20 +14,23 @@ public class TokenService {
     TokenRepo tokenRepo;
 
     public boolean checkToken(String username) {
-        return tokenCheckByRepo(getToken(username));
+        return tokenCheckByRepo(convertToken(username));
+    }
+
+    private String convertToken(String username) {
+        return String.valueOf((username+username.hashCode()).hashCode());
     }
 
     public boolean tokenCheckByRepo(String token) {
         return tokenRepo.findById(token).orElse(null)!=null;
     }
 
-    public String getToken(String username) {
-        String token = String.valueOf((username+username.hashCode()).hashCode());
-        tokenRepo.save(new Tokens(token,username));
-        return token;
+    public void revokeAuth(String token) {
+        tokenRepo.deleteById(convertToken(token));
     }
 
-    public void revokeAuth(String token) {
-        tokenRepo.deleteById(token);
+    public void saveToken(String username) {
+        String token = convertToken(username);
+        tokenRepo.save(new Tokens(token,username));
     }
 }

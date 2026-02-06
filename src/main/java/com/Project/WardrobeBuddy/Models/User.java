@@ -20,5 +20,7 @@ public class User {
     private String password;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Wardrobe> wardrobeList;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Category> categoryList;
     private String name;
 }

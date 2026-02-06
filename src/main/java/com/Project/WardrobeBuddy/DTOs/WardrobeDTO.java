@@ -14,6 +14,5 @@ public class WardrobeDTO {
     private String wardrobeName;
     private Date dateCreated;
     private String note;
-    private List<ProductDTO> productNameList;
     private Integer noOfProducts;
 }
