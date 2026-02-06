@@ -2,12 +2,13 @@ package com.Project.WardrobeBuddy.Controllers;
 
 
 import com.Project.WardrobeBuddy.DTOs.ProductDTO;
-import com.Project.WardrobeBuddy.Services.ProductServices;
+import com.Project.WardrobeBuddy.Services.ProductService;
 import com.Project.WardrobeBuddy.Services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 public class ProductController {
 
     @Autowired
-    ProductServices productServices;
+    ProductService productService;
 
     @Autowired
     TokenService tokenService;
@@ -29,7 +30,7 @@ public class ProductController {
 
         if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ArrayList<>());
 
-        List<ProductDTO> result = productServices.getAllProducts(username,wardrobeName);
+        List<ProductDTO> result = productService.getAllProducts(username,wardrobeName);
 
         if (result==null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<>());
@@ -44,7 +45,7 @@ public class ProductController {
 
         if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ArrayList<>());
 
-        List<ProductDTO> result = productServices.getAllProductsOfCategory(username,wardrobeName,category);
+        List<ProductDTO> result = productService.getAllProductsOfCategory(username,wardrobeName,category);
 
         if (result==null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ArrayList<>());
@@ -59,7 +60,7 @@ public class ProductController {
 
         if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ProductDTO());
 
-        ProductDTO product = productServices.getProduct(productID);
+        ProductDTO product = productService.getProduct(productID);
 
         if (product==null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ProductDTO());
@@ -75,9 +76,12 @@ public class ProductController {
 
         if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Logged In");
 
-        productServices.addProduct(username,wardrobeName,product);
+        if (productService.addProduct(username,wardrobeName,product)) {
+            return ResponseEntity.status(HttpStatus.CREATED).body("Product Added");
+        }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Product Added");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User or Wardrobe doesn't exist");
+
     }
 
     @DeleteMapping("/delete/{productID}")
@@ -86,7 +90,7 @@ public class ProductController {
 
         if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Logged In");
 
-        if (productServices.deleteProduct(productID))
+        if (productService.deleteProduct(productID))
             return ResponseEntity.status(HttpStatus.OK).body("Deleted");
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product doesn't exist");
@@ -99,9 +103,28 @@ public class ProductController {
 
         if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Logged In");
 
-        if (productServices.updateProduct(productID,product))
+        if (productService.updateProduct(productID,product))
             return ResponseEntity.status(HttpStatus.OK).body("Updated");
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product doesn't exist");
     }
+
+    @PutMapping("/add/image/{productID}")
+    public ResponseEntity<String> addImage(@PathVariable String username,
+                                                @PathVariable Long productID,
+                                                @RequestBody MultipartFile image) {
+
+        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Logged In");
+
+        try {
+            if (productService.addImage(productID,image))
+                return ResponseEntity.status(HttpStatus.OK).body("Updated");
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Do again");
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product doesn't exist");
+    }
+
 }

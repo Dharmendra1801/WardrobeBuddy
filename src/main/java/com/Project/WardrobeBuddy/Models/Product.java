@@ -23,5 +23,6 @@ public class Product {
     private String category;
     private String note;
     private Integer quantity;
-//    private byte[] image;
+    @Lob
+    private byte[] image;
 }

@@ -1,7 +1,7 @@
 package com.Project.WardrobeBuddy.Controllers;
 
 import com.Project.WardrobeBuddy.DTOs.WardrobeDTO;
-import com.Project.WardrobeBuddy.Services.WardrobeServices;
+import com.Project.WardrobeBuddy.Services.WardrobeService;
 import com.Project.WardrobeBuddy.Services.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class WardrobeController {
     TokenService tokenService;
 
     @Autowired
-    WardrobeServices wardrobeServices;
+    WardrobeService wardrobeService;
 
 
     @PostMapping("/new")
@@ -28,7 +28,7 @@ public class WardrobeController {
 
         if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Login required!!!");
 
-        if (wardrobeServices.createWardrobe(username, wardrobe))
+        if (wardrobeService.createWardrobe(username, wardrobe))
             return ResponseEntity.status(HttpStatus.CREATED).body("Wardrobe saved");
 
         return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body("Wardrobe name already exists");
@@ -39,7 +39,7 @@ public class WardrobeController {
 
         if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ArrayList<>());
 
-        List<WardrobeDTO> list_of_wardrobes = wardrobeServices.getAllWardrobe(username);
+        List<WardrobeDTO> list_of_wardrobes = wardrobeService.getAllWardrobe(username);
 
         return ResponseEntity.status(HttpStatus.FOUND).body(list_of_wardrobes);
     }
@@ -50,7 +50,7 @@ public class WardrobeController {
 
         if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new WardrobeDTO());
 
-        WardrobeDTO wardrobe = wardrobeServices.getWardrobe(username,wardrobeName);
+        WardrobeDTO wardrobe = wardrobeService.getWardrobe(username,wardrobeName);
         if (wardrobe==null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new WardrobeDTO());
 
@@ -64,7 +64,7 @@ public class WardrobeController {
 
         if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(-1L);
 
-        Long id = wardrobeServices.getId(username,wardrobeName);
+        Long id = wardrobeService.getId(username,wardrobeName);
 
         if (id==null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(-1L);
@@ -78,7 +78,7 @@ public class WardrobeController {
 
         if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new WardrobeDTO());
 
-        WardrobeDTO wardrobe = wardrobeServices.getWardrobeById(id);
+        WardrobeDTO wardrobe = wardrobeService.getWardrobeById(id);
 
         if (wardrobe==null)
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new WardrobeDTO());
@@ -93,7 +93,7 @@ public class WardrobeController {
 
         if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not logged in");
 
-        if (wardrobeServices.deleteWardrobe(username,wardrobeName))
+        if (wardrobeService.deleteWardrobe(username,wardrobeName))
             return ResponseEntity.status(HttpStatus.GONE).body("Deleted");
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wardrobe doesn't exist");
@@ -106,7 +106,7 @@ public class WardrobeController {
 
         if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not logged in");
 
-        if (wardrobeServices.changeName(username,wardrobeName,newName))
+        if (wardrobeService.changeName(username,wardrobeName,newName))
             return ResponseEntity.status(HttpStatus.OK).body("Changed");
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wardrobe doesn't exist");
@@ -119,7 +119,7 @@ public class WardrobeController {
 
         if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not logged in");
 
-        if (wardrobeServices.changeNote(username,wardrobeName,newNote))
+        if (wardrobeService.changeNote(username,wardrobeName,newNote))
             return ResponseEntity.status(HttpStatus.OK).body("Changed");
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Wardrobe doesn't exist");

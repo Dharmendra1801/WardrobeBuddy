@@ -1,8 +1,6 @@
 package com.Project.WardrobeBuddy.Services;
 
-import com.Project.WardrobeBuddy.DTOs.ProductDTO;
 import com.Project.WardrobeBuddy.DTOs.WardrobeDTO;
-import com.Project.WardrobeBuddy.Models.Product;
 import com.Project.WardrobeBuddy.Models.User;
 import com.Project.WardrobeBuddy.Models.Wardrobe;
 import com.Project.WardrobeBuddy.Repositories.WardrobeRepo;
@@ -15,7 +13,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class WardrobeServices {
+public class WardrobeService {
 
     @Autowired
     WardrobeRepo wardrobeRepo;

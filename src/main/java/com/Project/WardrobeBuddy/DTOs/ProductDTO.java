@@ -1,5 +1,6 @@
 package com.Project.WardrobeBuddy.DTOs;
 
+import jakarta.persistence.Lob;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,5 +19,6 @@ public class ProductDTO {
     private String category;
     private String note;
     private Integer quantity;
-//    private byte[] image;
+    @Lob
+    private byte[] image;
 }
