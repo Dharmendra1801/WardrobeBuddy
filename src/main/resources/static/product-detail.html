@@ -1,18 +1,71 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Product</title>
+    <title>Product Details</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-<div class="card" id="product"></div>
+<button onclick="goBack()">⬅ Back</button>
+<button onclick="logout()">Logout</button>
 
-<input type="file" id="image">
-<button onclick="uploadImage()">Upload Image</button>
+<h2 id="name"></h2>
+
+<img id="image" width="200" />
+
+<p><b>Category:</b> <span id="category"></span></p>
+<p><b>Brand:</b> <span id="brand"></span></p>
+<p><b>Price:</b> ₹<span id="price"></span></p>
+<p><b>Quantity:</b> <span id="quantity"></span></p>
+<p><b>Note:</b> <span id="note"></span></p>
+
+<br>
+<button style="background:red;color:white" onclick="deleteProduct()">🗑 Delete Product</button>
 
 <script src="/js/auth.js"></script>
-<script src="/js/product-detail.js"></script>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const productId = params.get("id");
+    const username = getUser();
+
+    async function loadProduct() {
+      const res = await fetch(`/api/${username}/dummy/product/id/${productId}`);
+      const p = await res.json();
+
+      document.getElementById("name").innerText = p.productName;
+      document.getElementById("category").innerText = p.category;
+      document.getElementById("brand").innerText = p.brand;
+      document.getElementById("price").innerText = p.price;
+      document.getElementById("quantity").innerText = p.quantity;
+      document.getElementById("note").innerText = p.note || "";
+
+      if (p.image) {
+        document.getElementById("image").src =
+          "data:image/jpeg;base64," + p.image;
+      }
+    }
+
+    async function deleteProduct() {
+      if (!confirm("Delete this product?")) return;
+
+      const res = await fetch(`/api/${username}/dummy/product/delete/${productId}`, {
+        method: "DELETE"
+      });
+
+      if (res.ok) {
+        alert("Product deleted");
+        window.history.back();
+      } else {
+        alert(await res.text());
+      }
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    loadProduct();
+</script>
 
 </body>
 </html>

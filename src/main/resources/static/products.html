@@ -6,19 +6,59 @@
 </head>
 <body>
 
-<h2>Products</h2>
+<button onclick="goBack()">⬅ Back</button>
+<button onclick="logout()">Logout</button>
 
-<input id="productName" placeholder="Product name">
-<input id="category" placeholder="Category">
-<input id="price" type="number" placeholder="Price">
-<input id="quantity" type="number" placeholder="Quantity">
+<h2 id="title"></h2>
 
-<button onclick="addProduct()">Add Product</button>
-
-<ul id="productList"></ul>
+<div class="products" id="products"></div>
 
 <script src="/js/auth.js"></script>
-<script src="/js/products.js"></script>
+<script>
+    const username = getUser();
+    const params = new URLSearchParams(window.location.search);
+    const wardrobe = params.get("wardrobe");
+
+    document.getElementById("title").innerText =
+      "Products in " + wardrobe;
+
+    async function loadProducts() {
+      const res = await fetch(
+        `/api/${username}/${wardrobe}/product/all`
+      );
+      const list = await res.json();
+
+      const container = document.getElementById("products");
+      container.innerHTML = "";
+
+      list.forEach(p => {
+        const div = document.createElement("div");
+        div.className = "product";
+        div.onclick = () =>
+          window.location.href = `/product-detail.html?id=${p.id}`;
+
+        const img = document.createElement("img");
+        img.src = p.image
+          ? "data:image/jpeg;base64," + p.image
+          : "https://via.placeholder.com/300";
+
+        div.innerHTML = `
+          <h3>${p.productName}</h3>
+          <p>${p.category}</p>
+          <p>₹${p.price}</p>
+        `;
+
+        div.prepend(img);
+        container.appendChild(div);
+      });
+    }
+
+    function goBack() {
+      window.history.back();
+    }
+
+    loadProducts();
+</script>
 
 </body>
 </html>
