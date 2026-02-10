@@ -15,57 +15,21 @@
 
 <p><b>Category:</b> <span id="category"></span></p>
 <p><b>Brand:</b> <span id="brand"></span></p>
-<p><b>Price:</b> <span id="price"></span></p>
+<p><b>Price:</b> ₹<span id="price"></span></p>
 <p><b>Quantity:</b> <span id="quantity"></span></p>
 <p><b>Note:</b> <span id="note"></span></p>
 
-<br>
+<hr>
+
+<h3>Add / Update Image</h3>
+<input type="file" id="imageFile" accept="image/*">
+<br><br>
+<button onclick="uploadImage()">📷 Upload Image</button>
+
+<br><br>
 <button style="background:red;color:white" onclick="deleteProduct()">🗑 Delete Product</button>
 
 <script src="/js/auth.js"></script>
-<script>
-    const params = new URLSearchParams(window.location.search);
-    const productId = params.get("id");
-    const username = getUser();
-
-    async function loadProduct() {
-      const res = await fetch(`/api/${username}/dummy/product/id/${productId}`);
-      const p = await res.json();
-
-      document.getElementById("name").innerText = p.productName;
-      document.getElementById("category").innerText = p.category;
-      document.getElementById("brand").innerText = p.brand;
-      document.getElementById("price").innerText = p.price;
-      document.getElementById("quantity").innerText = p.quantity;
-      document.getElementById("note").innerText = p.note || "";
-
-      if (p.image) {
-        document.getElementById("image").src =
-          "data:image/jpeg;base64," + p.image;
-      }
-    }
-
-    async function deleteProduct() {
-      if (!confirm("Delete this product?")) return;
-
-      const res = await fetch(`/api/${username}/dummy/product/delete/${productId}`, {
-        method: "DELETE"
-      });
-
-      if (res.ok) {
-        alert("Product deleted");
-        window.history.back();
-      } else {
-        alert(await res.text());
-      }
-    }
-
-    function goBack() {
-      window.history.back();
-    }
-
-    loadProduct();
-</script>
-
+<script src="/js/product-detail.js"></script> <!-- ✅ -->
 </body>
 </html>

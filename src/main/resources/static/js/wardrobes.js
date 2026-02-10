@@ -11,7 +11,7 @@ async function loadWardrobes() {
     const li = document.createElement("li");
     li.textContent = w.wardrobeName;
     li.onclick = () => {
-      window.location.href = `/products.html?wardrobe=${w.wardrobeName}`;
+      window.location.href = `/products.html?wardrobe=${w.wardrobeName}&wardrobe=${wardrobe}`;
     };
     list.appendChild(li);
   });
