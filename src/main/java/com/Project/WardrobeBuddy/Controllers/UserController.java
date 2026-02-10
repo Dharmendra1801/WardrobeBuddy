@@ -21,6 +21,7 @@ public class UserController {
     @Autowired
     TokenService tokenService;
 
+
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserDTO user) {
 
