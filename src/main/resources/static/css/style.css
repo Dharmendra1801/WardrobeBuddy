@@ -1,38 +1,85 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 16px;
-  background: #f4f4f4;
+/* RESET */
+* {
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-h2 {
+body {
+  margin: 0;
+  padding: 16px;
+  background: #f6f7fb;
+  color: #222;
+}
+
+/* HEADINGS */
+h2, h3 {
+  margin-top: 0;
   text-align: center;
 }
 
+/* INPUTS */
 input, button {
   width: 100%;
   padding: 12px;
   margin: 8px 0;
   font-size: 16px;
+  border-radius: 6px;
 }
 
+input {
+  border: 1px solid #ccc;
+}
+
+/* BUTTONS */
 button {
-  background: #222;
+  background: #2563eb;
   color: white;
   border: none;
-  border-radius: 4px;
+  font-weight: 600;
 }
 
-.container {
-  max-width: 400px;
-  margin: auto;
+button:hover {
+  background: #1e40af;
+}
+
+/* LISTS */
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: white;
+  padding: 14px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+}
+
+li:hover {
+  background: #eef2ff;
+}
+
+/* CARDS (Product Detail) */
+.card {
   background: white;
   padding: 16px;
-  border-radius: 8px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-a {
-  display: block;
-  text-align: center;
-  margin-top: 12px;
+/* IMAGE */
+img {
+  max-width: 100%;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+/* SMALL SCREENS FIX */
+@media (min-width: 600px) {
+  body {
+    max-width: 500px;
+    margin: auto;
+  }
 }
