@@ -9,8 +9,31 @@
 <button onclick="goBack()">Back</button>
 <button onclick="logout()">Logout</button>
 
+<!-- DELETE WARDROBE -->
+<button style="background:red;color:white"
+        onclick="deleteWardrobe()">
+    🗑 Delete Wardrobe
+</button>
+
 <h2 id="title"></h2>
 
+<hr>
+
+<!-- ADD PRODUCT -->
+<h3>Add Product</h3>
+
+<input id="pname" placeholder="Product name">
+<input id="category" placeholder="Category">
+<input id="brand" placeholder="Brand">
+<input id="price" type="number" placeholder="Price">
+<input id="quantity" type="number" placeholder="Quantity">
+<textarea id="note" placeholder="Note"></textarea>
+
+<button onclick="addProduct()">➕ Add Product</button>
+
+<hr>
+
+<!-- PRODUCT LIST -->
 <div class="products" id="products"></div>
 
 <script src="/js/auth.js"></script>
@@ -35,7 +58,8 @@
         const div = document.createElement("div");
         div.className = "product";
         div.onclick = () =>
-          window.location.href = `/product-detail.html?id=${p.id}`;
+          window.location.href =
+            `/product-detail.html?id=${p.id}`;
 
         const img = document.createElement("img");
         img.src = p.image
@@ -45,12 +69,55 @@
         div.innerHTML = `
           <h3>${p.productName}</h3>
           <p>${p.category}</p>
-          <p>${p.price}</p>
+          <p>₹ ${p.price}</p>
         `;
 
         div.prepend(img);
         container.appendChild(div);
       });
+    }
+
+    async function addProduct() {
+      const product = {
+        productName: pname.value,
+        category: category.value,
+        brand: brand.value,
+        price: price.value,
+        quantity: quantity.value,
+        note: note.value
+      };
+
+      const res = await fetch(
+        `/api/${username}/${wardrobe}/product/add`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(product)
+        }
+      );
+
+      if (res.ok) {
+        alert("Product added");
+        loadProducts();
+      } else {
+        alert(await res.text());
+      }
+    }
+
+    async function deleteWardrobe() {
+      if (!confirm("Delete this wardrobe?")) return;
+
+      const res = await fetch(
+        `/api/${username}/wardrobe/delete/${wardrobe}`,
+        { method: "DELETE" }
+      );
+
+      if (res.ok) {
+        alert("Wardrobe deleted");
+        window.location.href = "/wardrobes.html";
+      } else {
+        alert(await res.text());
+      }
     }
 
     function goBack() {
