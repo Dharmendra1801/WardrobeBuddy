@@ -109,22 +109,25 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product doesn't exist");
     }
 
-    @PutMapping("/add/image/{productID}")
-    public ResponseEntity<String> addImage(@PathVariable String username,
-                                                @PathVariable Long productID,
-                                                @RequestBody MultipartFile image) {
+    @PutMapping(value = "/add/image/{productID}", consumes = "multipart/form-data")
+    public ResponseEntity<String> addImage(
+            @PathVariable String username,
+            @PathVariable Long productID,
+            @RequestParam("image") MultipartFile image
+    ) {
 
-        if (!tokenService.checkToken(username)) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Logged In");
+        if (!tokenService.checkToken(username))
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Not Logged In");
 
         try {
-            if (productService.addImage(productID,image))
-                return ResponseEntity.status(HttpStatus.OK).body("Updated");
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Do again");
+            if (productService.addImage(productID, image))
+                return ResponseEntity.ok("Image Uploaded");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Try again");
         }
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product doesn't exist");
     }
+
 
 }

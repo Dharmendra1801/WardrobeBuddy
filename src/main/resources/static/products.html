@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<div class="container">
+    <h2>Products</h2>
+
+    <!-- ADD PRODUCT -->
+    <input id="productName" placeholder="Product name">
+    <input id="brand" placeholder="Brand">
+    <input id="category" placeholder="Category">
+    <input id="price" type="number" placeholder="Price">
+    <input id="quantity" type="number" placeholder="Quantity">
+    <input id="note" placeholder="Note">
+
+    <button onclick="addProduct()">Add Product</button>
+
+    <hr>
+
+    <!-- FILTER -->
+    <input id="filterCategory" placeholder="Filter by category">
+    <button onclick="loadByCategory()">Filter</button>
+    <button onclick="loadAll()">Load All</button>
+
+    <hr>
+
+    <!-- PRODUCT LIST -->
+    <ul id="list"></ul>
+
+    <p id="msg"></p>
+</div>
+
+<script src="/js/product.js"></script>
+</body>
+</html>

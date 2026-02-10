@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h2>Profile</h2>
+
+    <input id="newName" placeholder="New Name">
+    <button onclick="updateName()">Update Name</button>
+
+    <input id="oldPass" type="password" placeholder="Old Password">
+    <input id="newPass" type="password" placeholder="New Password">
+    <button onclick="updatePassword()">Update Password</button>
+
+    <button onclick="deleteAccount()">Delete Account</button>
+    <p id="msg"></p>
+</div>
+
+<script src="/js/user.js"></script>
+</body>
+</html>
