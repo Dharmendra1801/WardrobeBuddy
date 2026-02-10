@@ -6,7 +6,7 @@
 </head>
 <body>
 
-<button onclick="goBack()">⬅ Back</button>
+<button onclick="goBack()">Back</button>
 <button onclick="logout()">Logout</button>
 
 <h2 id="title"></h2>
@@ -45,7 +45,7 @@
         div.innerHTML = `
           <h3>${p.productName}</h3>
           <p>${p.category}</p>
-          <p>₹${p.price}</p>
+          <p>${p.price}</p>
         `;
 
         div.prepend(img);

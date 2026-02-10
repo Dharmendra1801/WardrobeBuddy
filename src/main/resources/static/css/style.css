@@ -1,65 +1,174 @@
-body {
-  font-family: Arial, sans-serif;
+/* =========================
+   GLOBAL RESET
+   ========================= */
+* {
+  box-sizing: border-box;
   margin: 0;
-  padding: 15px;
-  background: #f5f5f5;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-h2 {
-  text-align: center;
+body {
+  background: #f4f6f8;
+  color: #222;
+  padding: 16px;
+}
+
+/* =========================
+   HEADINGS
+   ========================= */
+h1, h2, h3 {
+  margin-bottom: 12px;
+}
+
+/* =========================
+   INPUTS & BUTTONS
+   ========================= */
+input, button, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px;
 }
 
 button {
-  padding: 10px 15px;
-  margin: 5px;
+  background: #2563eb;
+  color: white;
+  border: none;
   cursor: pointer;
 }
 
-/* ===== PRODUCT GRID ===== */
+button:hover {
+  background: #1d4ed8;
+}
+
+/* =========================
+   LINKS
+   ========================= */
+a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   PAGE CONTAINERS
+   ========================= */
+.container {
+  max-width: 1100px;
+  margin: auto;
+}
+
+/* =========================
+   WARDROBE LIST
+   ========================= */
+.wardrobes {
+  display: grid;
+  gap: 16px;
+}
+
+.wardrobe {
+  background: white;
+  padding: 14px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  cursor: pointer;
+}
+
+/* =========================
+   PRODUCT GRID (IMPORTANT)
+   ========================= */
 .products {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
+  gap: 16px;
 }
 
-/* ===== PRODUCT CARD ===== */
-.product {
-  background: white;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.2s;
+/* Desktop / Mac */
+@media (min-width: 901px) {
+  .products {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
-.product:hover {
-  transform: scale(1.03);
+/* Tablets */
+@media (min-width: 601px) and (max-width: 900px) {
+  .products {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-/* ===== PRODUCT IMAGE ===== */
-.product img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-/* ===== PRODUCT TEXT ===== */
-.product h3 {
-  margin: 10px 0 5px;
-  font-size: 18px;
-}
-
-.product p {
-  margin: 3px 0;
-  font-size: 14px;
-}
-
-/* ===== MOBILE ===== */
+/* Mobile — STRICT 2 ONLY */
 @media (max-width: 600px) {
   .products {
     grid-template-columns: repeat(2, 1fr);
   }
+}
+
+/* =========================
+   PRODUCT TILE
+   ========================= */
+.product {
+  background: white;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.product img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.product h3 {
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.product p {
+  font-size: 14px;
+  color: #555;
+}
+
+/* =========================
+   PRODUCT DETAILS PAGE
+   ========================= */
+.product-details img {
+  width: 100%;
+  max-height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+/* =========================
+   ACTION BUTTONS
+   ========================= */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.actions button {
+  flex: 1;
+}
+
+/* =========================
+   LOGOUT BUTTON
+   ========================= */
+.logout {
+  background: #dc2626;
+}
+
+.logout:hover {
+  background: #b91c1c;
 }
