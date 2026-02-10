@@ -1,27 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="js/auth.js"></script>
-    <script src="js/wardrobes.js" defer></script>
+    <title>Wardrobes</title>
     <link rel="stylesheet" href="/css/style.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 </head>
 <body>
 
 <h2>Your Wardrobes</h2>
-<button onclick="logout()">Logout</button>
 
-<hr>
-
-<h3>Create New Wardrobe</h3>
-<input id="wardrobeName" placeholder="Wardrobe name">
-<input id="wardrobeNote" placeholder="Note (optional)">
+<input id="wardrobeName" placeholder="New wardrobe name">
 <button onclick="addWardrobe()">Add Wardrobe</button>
 
-<hr>
-
 <ul id="wardrobeList"></ul>
+
+<script src="/js/auth.js"></script>
+<script src="/js/wardrobes.js"></script>
 
 </body>
 </html>
