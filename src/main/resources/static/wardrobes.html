@@ -6,12 +6,17 @@
 </head>
 <body>
 
-<h2>Your Wardrobes</h2>
+<div class="container">
 
-<input id="wardrobeName" placeholder="New wardrobe name" required>
-<button onclick="addWardrobe()">Add Wardrobe</button>
+    <h2>Your Wardrobes</h2>
 
-<ul id="wardrobeList"></ul>
+    <input id="wardrobeName" placeholder="New wardrobe name" required>
+    <button onclick="addWardrobe()">Add Wardrobe</button>
+
+    <!-- ✅ MATCHES CSS -->
+    <div class="wardrobes" id="wardrobeList"></div>
+
+</div>
 
 <script src="/js/auth.js"></script>
 <script src="/js/wardrobes.js"></script>
