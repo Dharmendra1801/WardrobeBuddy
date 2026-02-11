@@ -32,10 +32,19 @@
 
 <hr>
 
+<!-- FILTER BY CATEGORY -->
+<h3>Filter by Category</h3>
+<input id="searchCategory" placeholder="Enter category">
+<button onclick="filterCategory()">Search</button>
+<button onclick="loadProducts()">Show All</button>
+
+<hr>
+
 <!-- PRODUCT LIST -->
 <div class="products" id="products"></div>
 
 <script src="/js/auth.js"></script>
+
 <script>
     const username = getUser();
     const params = new URLSearchParams(window.location.search);
@@ -44,18 +53,27 @@
     document.getElementById("title").innerText =
       "Products in " + wardrobe;
 
+    let allProducts = [];   // store all fetched products
+
     async function loadProducts() {
       const res = await fetch(
         `/api/${username}/${wardrobe}/product/all`
       );
       const list = await res.json();
 
+      allProducts = list;  // store globally
+
+      renderProducts(allProducts);
+    }
+
+    function renderProducts(list) {
       const container = document.getElementById("products");
       container.innerHTML = "";
 
       list.forEach(p => {
         const div = document.createElement("div");
         div.className = "product";
+
         div.onclick = () =>
           window.location.href =
             `/product-detail.html?id=${p.id}&wardrobe=${wardrobe}`;
@@ -74,6 +92,26 @@
         div.prepend(img);
         container.appendChild(div);
       });
+    }
+
+    function filterCategory() {
+      const category = document
+        .getElementById("searchCategory")
+        .value
+        .toLowerCase()
+        .trim();
+
+      if (!category) {
+        alert("Enter category");
+        return;
+      }
+
+      const filtered = allProducts.filter(p =>
+        p.category &&
+        p.category.toLowerCase() === category
+      );
+
+      renderProducts(filtered);
     }
 
     async function addProduct() {
