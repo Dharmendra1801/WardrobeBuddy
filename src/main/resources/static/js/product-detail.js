@@ -54,7 +54,7 @@ async function uploadImage() {
     alert("Image uploaded");
     loadProduct();
   } else {
-    alert(await res.text());
+    alert(res.text());
   }
 }
 
